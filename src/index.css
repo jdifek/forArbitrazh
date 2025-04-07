@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	@media (min-width: 1300px) and (max-width: 1349px) {
+		.max-w-0_6xl {
+			max-width: 1010px !important;
+		}
+	}
+	@media (min-width: 1350px) and (max-width: 1399px) {
+		.max-w-0_9xl {
+			max-width: 1060px !important;
+		}
+	}
+	@media (min-width: 1400px) and (max-width: 1449px) {
+		.max-w-1_3xl {
+			max-width: 1110px !important;
+		}
+	}
+	@media (min-width: 1450px) and (max-width: 1499px) {
+		.max-w-1_6xl {
+			max-width: 1160px !important;
+		}
+	}
+	@media (min-width: 1500px) and (max-width: 1535px) {
+		.max-w-1_9xl {
+			max-width: 1200px !important;
+		}
+	}
+	@media (min-width: 1250px) and (max-width: 1279px) {
+		.max-w-4lg {
+			max-width: 950px !important;
+		}
+	}
+	@media (min-width: 1225px) and (max-width: 1249px) {
+		.max-w-3_5lg {
+			max-width: 940px !important;
+		}
+	}
+	@media (min-width: 1200px) and (max-width: 1224px) {
+		.max-w-3lg {
+			max-width: 900px !important;
+		}
+	}
+	@media (min-width: 1150px) and (max-width: 1199px) {
+		.max-w-2_5lg {
+			max-width: 880px !important;
+		}
+	}
+	@media (min-width: 1100px) and (max-width: 1149px) {
+		.max-w-2lg {
+			max-width: 800px !important;
+		}
+	}
+	@media (min-width: 1070px) and (max-width: 1099px) {
+		.max-w-1_5lg {
+			max-width: 760px !important;
+		}
+	}
+	@media (min-width: 1050px) and (max-width: 1069px) {
+		.max-w-1lg {
+			max-width: 740px !important;
+		}
+	}
+
+	/* MaintenanceHistory page */
+	@media (min-width: 1250px) and (max-width: 1279px) {
+		.max-w-4lg_sm {
+			max-width: 930px !important;
+		}
+	}
+	@media (min-width: 1225px) and (max-width: 1249px) {
+		.max-w-3_5lg_sm {
+			max-width: 900px !important;
+		}
+	}
+	@media (min-width: 1200px) and (max-width: 1224px) {
+		.max-w-3lg_sm {
+			max-width: 880px !important;
+		}
+	}
+	@media (min-width: 1150px) and (max-width: 1199px) {
+		.max-w-2_5lg_sm {
+			max-width: 830px !important;
+		}
+	}
+	@media (min-width: 1100px) and (max-width: 1149px) {
+		.max-w-2lg_sm {
+			max-width: 780px !important;
+		}
+	}
+	@media (min-width: 1070px) and (max-width: 1099px) {
+		.max-w-1_5lg_sm {
+			max-width: 750px !important;
+		}
+	}
+	@media (min-width: 1050px) and (max-width: 1069px) {
+		.max-w-1lg_sm {
+			max-width: 730px !important;
+		}
+	}
+}

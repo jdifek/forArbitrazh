@@ -1,0 +1,28 @@
+name: Manual-Deploy
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v4
+
+      - name: install Packages
+        run: npm install
+
+      - name: create env
+        run: |
+          echo "VITE_API_URL=${{ secrets.BACKEND_API_URL }}" >> .env
+
+      - name: build
+        run: npm run build
+
+      - name: move to /www/fe
+        run: rsync -a dist/ /www/fe/dist/
