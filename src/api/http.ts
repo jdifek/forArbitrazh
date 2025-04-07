@@ -1,6 +1,7 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import TokenService from "./Token/TokenService";
+import UsersService from "./Users/UsersService";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 
@@ -45,13 +46,13 @@ $api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== `${API_URL}/token/refresh/`
+      originalRequest.url !== `${API_URL}/users/token/refresh/`
     ) {
       originalRequest._retry = true;
       console.log("🔴 401 detected, attempting token refresh...");
 
       if (isRefreshing) {
-        // Если уже идет обновление токена, ставим запрос в очередь
+        console.log("🔄 Token refresh already in progress, adding to queue...");
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -66,33 +67,36 @@ $api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
-        console.log("🔹 Current refreshToken:", refreshToken);
+        console.log("🔹 Current refreshToken:", refreshToken ? "exists" : "missing");
 
         if (!refreshToken) {
-          throw new Error("🔴 No refresh token available");
+          console.log("🔴 No refresh token available, clearing auth data...");
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("userRole");
+          window.dispatchEvent(new Event("auth-failure"));
+          return Promise.reject(new Error("No refresh token available"));
         }
 
         console.log("🔄 Trying to refresh token...");
-        const response = await TokenService.refreshToken({
+        const response = await UsersService.refreshUserToken({
           refresh: refreshToken,
         });
-        console.log("✅ Refresh token response:", response);
+        console.log("✅ Refresh token response received:", response);
 
-        const newAccessToken = response.data?.access;
+        const newAccessToken = response.access;
         if (!newAccessToken) {
           console.log("⚠️ No access token received! Logging out...");
           localStorage.removeItem("authToken");
           localStorage.removeItem("refreshToken");
-          window.location.href = "/"; // Теперь точно редирект
-          return Promise.reject(
-            new Error("🔴 No access token received from refresh")
-          );
+          localStorage.removeItem("userRole");
+          window.location.href = "/";
+          return Promise.reject(new Error("No access token received from refresh"));
         }
 
-        // Сохраняем новый токен
+        console.log("✅ Saving new access token...");
         localStorage.setItem("authToken", newAccessToken);
 
-        // Разрешаем все запросы в очереди с новым токеном
         processQueue(null, newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -104,16 +108,16 @@ $api.interceptors.response.use(
 
         // Обрабатываем случай отсутствия refreshToken или 401 от сервера
         if (
-          refreshError.message === "🔴 No refresh token available" ||
+          refreshError.message === "No refresh token available" ||
           refreshError.response?.status === 401
         ) {
           console.log("🔴 Processing auth failure...");
           localStorage.removeItem("authToken");
           localStorage.removeItem("refreshToken");
+          localStorage.removeItem("userRole");
 
           processQueue(refreshError);
 
-          // Вызываем глобальное событие для открытия модалки
           console.log("⚡ Dispatching auth failure event...");
           window.dispatchEvent(new Event("auth-failure"));
         } else {
