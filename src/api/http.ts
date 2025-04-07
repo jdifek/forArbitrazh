@@ -46,7 +46,7 @@ $api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== `${API_URL}/users/token/refresh/`
+      originalRequest.url !== `${API_URL}/token/refresh/`
     ) {
       originalRequest._retry = true;
       console.log("🔴 401 detected, attempting token refresh...");
